@@ -70,16 +70,40 @@ tip: godoc을 사용하여 코드에 작성된 주석을 문서화할 수 있음
 변수는 `var` 키워드를 사용하여 선언할 수 있음. 변수 선언 시 타입을 명시해야 함. 변수를 선언할 때 초기값을 지정할 수 있음. **초기화**란 변수에 값을 할당하는 것을 의미
 
 ```go
+var name type = expression
+```
+
+```go
+name := expression
+```
+
+
+
+```go
 var name string = "Alice" // 변수 선언 및 초기화
 var age int // 변수 선언 (초깃값을 지정하지 않으면 타입의 기본값으로 초기화)
 var height = 175 // 타입을 생략하면 초기값의 타입으로 변수 타입이 결정
 weight := 70 // var 키워드를 생략하고 := 연산자를 사용하여 변수 선언 및 초기화
+x, y := 1, 2
 ```
 
 - var: 변수 선언 키워드
 - name: 변수명
 - string: 변수 타입
 - "Alice": 변수 값
+
+## 빈 식별자
+
+공백 식별자는 `_(언더스코어)`를 사용하며 선언 시에 바인딩을 하지 않습니다
+
+```go
+_, err := fmt.Printf("Hello world")
+if err != nil {
+	// handle error
+}
+```
+
+
 
 ## 변수 값 변경
 
@@ -110,18 +134,18 @@ var age int = 20
 
 숫자 타입 외의 기본 타입에 대한 표
 
-| 타입      | 설명                                                                   | 예시                                        |
-| --------- | ---------------------------------------------------------------------- | ------------------------------------------- |
-| bool      | 불리언 타입으로 참, 거짓을 표현                                        | true                                        |
-| string    | 문자열 타입으로 문자들의 집합                                          | "Hello, World!"                             |
-| array     | 배열 타입으로 같은 타입의 데이터를 순서대로 저장                       | [1, 2, 3]                                   |
-| slice     | 배열과 유사하지만 크기가 동적으로 변하는 배열                          | []int{1, 2, 3}                              |
-| map       | 키와 값으로 이루어진 데이터 구조                                       | map[string]int{"Alice": 20, "Bob": 21}      |
+| 타입      | 설명                                                         | 예시                                        |
+| --------- | ------------------------------------------------------------ | ------------------------------------------- |
+| bool      | 불리언 타입으로 참, 거짓을 표현                              | true                                        |
+| string    | 문자열 타입으로 문자들의 집합                                | "Hello, World!", `"Hello world"`            |
+| array     | 배열 타입으로 같은 타입의 데이터를 순서대로 저장             | [1, 2, 3]                                   |
+| slice     | 배열과 유사하지만 크기가 동적으로 변하는 배열                | []int{1, 2, 3}                              |
+| map       | 키와 값으로 이루어진 데이터 구조                             | map[string]int{"Alice": 20, "Bob": 21}      |
 | struct    | 필드들의 집합으로 구조체. 일반적으로 상관 관계의 데이터를 묶을 때 사용 | type Person struct { Name string; Age int } |
-| pointer   | 메모리 주소를 저장하는 타입                                            | &name                                       |
-| function  | 함수 타입                                                              | func add(a int, b int) int { return a + b } |
-| channel   | 고루틴 간 통신을 위한 타입                                             | ch := make(chan int)                        |
-| interface | 메서드 집합을 정의하는 타입                                            | type Stringer interface { String() string } |
+| pointer   | 메모리 주소를 저장하는 타입                                  | &name                                       |
+| function  | 함수 타입                                                    | func add(a int, b int) int { return a + b } |
+| channel   | 고루틴 간 통신을 위한 타입                                   | ch := make(chan int)                        |
+| interface | 메서드 집합을 정의하는 타입                                  | type Stringer interface { String() string } |
 
 ### Go의 숫자 타입
 
@@ -144,8 +168,8 @@ var age int = 20
 | int64      | 부호 있는 64비트 정수                              | -9223372036854775808 ~ 9223372036854775807 |
 | float32    | 32비트 부동소수점                                  | IEEE-754 32비트                            |
 | float64    | 64비트 부동소수점                                  | IEEE-754 64비트                            |
-| complex64  | 32비트 실수부와 허수부                             | 32비트 실수부, 32비트 허수부               |
-| complex128 | 64비트 실수부와 허수부                             | 64비트 실수부, 64비트 허수부               |
+| complex64  | 32비트 실수부와 허수부의 복소수                    | 32비트 실수부, 32비트 허수부               |
+| complex128 | 64비트 실수부와 허수부의 복소수                    | 64비트 실수부, 64비트 허수부               |
 | byte       | uint8과 동일                                       | 0 ~ 255                                    |
 | rune       | int32와 동일                                       | -2147483648 ~ 2147483647                   |
 | int        | 32비트 시스템에서 int32, 64비트 시스템에서 int64   | 시스템 아키텍처에 따라 다름                |
@@ -156,13 +180,22 @@ var age int = 20
 변수 선언 시 초기값을 지정하지 않으면 타입별 기본값으로 초기화
 `nil`은 정의되지 않은 값(메모리 주소)을 나타내는 Go의 특별한 값
 
-| 타입                 | 기본값 |
-| -------------------- | ------ |
-| 모든 정수 타입       | 0      |
-| 모든 부동소수점 타입 | 0.0    |
-| bool                 | false  |
-| string               | ""     |
-| 그 외                | nil    |
+| 타입            | 기본값 |
+| --------------- | ------ |
+| 정수 타입       | 0      |
+| 부동소수점 타입 | 0.0    |
+| bool            | false  |
+| string          | ""     |
+| 그 외           | nil    |
+
+
+
+```go
+var i int
+fmt.Printf("%d", i) // 0
+```
+
+
 
 ### 타입 변환
 
@@ -1120,8 +1153,9 @@ var 변수명 [요소 개수]타입
 5개의 정수는 담는 배열
 
 ```go
-var nums [5]int = [5]int{1, 2, 3, 4, 5}
-nums := [...]int{1, 2, 3, 4, 5}
+var arr [3]int // 제로 값을 가진 길이가 3인 배열
+var nums [5]int = [5]int{1, 2, 3, 4, 5} // 1,2,3,4,5 를 가진 길이가 5인 배열
+nums := [...]int{1, 2, 3, 4, 5} // 위와 동일
 ```
 
 5개의 실수를 담는 배열
@@ -1173,3 +1207,101 @@ for _ x := range arr {
     fmt.Println()
 }
 ```
+
+
+
+
+
+## 슬라이스
+
+전통적인 배열을 중심으로 추상화된 Go의 데이터 유형
+
+### 슬라이스의 구성요소
+
+- 슬라이스의 첫 번째 요소를 나타내는 백업 배열의 일부 요소에 대한 포인터
+  (반드시 배열의 첫 번째 요소일 필요는 없음)
+- 슬라이스의 요소 수를 나타내는 길이
+- 길이의 상위 값을 나타내는 용량(지정하지 않으면 슬라이스 시작과 백킹 배열 끝 사이의 요소 수
+
+슬라이스 길이 -> `len`
+
+슬라이스 용량 -> `cap`
+
+
+
+```go
+s := make([]int, 3) // 
+s := []int{0, 0, 0} // 슬라이스 리터럴 방식. 위와 동일
+fmt.Println(s) // "[0 0 0]"
+fmt.Println(len(s)) // 3
+s[0] = 1
+s[1] = 2
+s[2] = 3
+fmt.Println(s) // [1 2 3]
+```
+
+
+
+### 값 추가
+
+원래의 값에 하나 이상의 새로운 값을 추가한 슬라이스를 반환
+
+```go
+	s := []int{1, 2, 3}
+	fmt.Println(s) // "[1 2 3]"
+	s = append(s, 4)
+	fmt.Println(s) // [1 2 3 4]
+```
+
+```go
+	s := []int{1, 2, 3}
+	fmt.Println(s) // "[1 2 3]"
+	s = append(s, s...)
+	fmt.Println(s) // [1 2 3 1 2 3]
+```
+
+
+
+
+
+## 포인터
+
+명시적으로 초기화하지 않는 경우 null
+
+```go
+	var a int = 10
+
+	var p *int = &a // p of type *int points to a
+	fmt.Println(p)  // "0xc000104040"
+	fmt.Println(*p) // "10"
+
+	*p = 20        // indirectly update a
+	fmt.Println(a) // "20"
+```
+
+```go
+	var a *int
+	fmt.Println(a) // <nil>
+```
+
+
+
+
+
+## 오류 처리
+
+```go
+result, err := doSomething()
+if err != nil {
+	log.Fatal(err)
+	return err
+}
+```
+
+### 오류 생성
+
+```go
+error1 := errors.New("error Something")
+error2 := fmt.Errorf("error Code: %d", 500)
+```
+
